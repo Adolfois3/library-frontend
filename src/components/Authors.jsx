@@ -1,22 +1,18 @@
-import { gql } from "@apollo/client"
+
 import { useMutation } from "@apollo/client/react"
 import { useState } from "react"
 import Select from "react-select"
+import { ALL_AUTHOR, UPDATE_AUTHOR } from "./ServiceGql"
 
-const UPDATE_AUTHOR = gql`
-mutation updateAuthor($name:String!, $setBorn:Int!){
-  addBorn(name: $name, setBorn: $setBorn) {
-    born
-    name
-  }
-}
-`
+
 
 const Authors = (props) => {
-
+  
   const [selectAuthor, setSelectAuthor] = useState(null)
   const [born, setBorn] = useState('')
-  const [updateAuthor] = useMutation(UPDATE_AUTHOR)
+  const [updateAuthor] = useMutation(UPDATE_AUTHOR, {
+    refetchQueries:[{query:ALL_AUTHOR}]
+  })
 
   if (!props.show) {
     return null
@@ -34,8 +30,6 @@ const authorOptions = props.authors.map(author => ({
     const bornInt = Number(born)
     try{
        await updateAuthor({variables: {name:name,setBorn:bornInt}})
-      
-
       setSelectAuthor(null)
       setBorn('')
 
@@ -56,7 +50,7 @@ const authorOptions = props.authors.map(author => ({
             <th>books</th>
           </tr>
           {props.authors.map((a) => (
-            <tr key={a.id}>
+            <tr key={a.id || a.name}>
               <td>{a.name}</td>
               <td>{a.born}</td>
             </tr>
@@ -73,7 +67,6 @@ const authorOptions = props.authors.map(author => ({
           options={authorOptions}
           placeholder="Select Author...">
           </Select>
-
         </div>
         <div>
           born <input
