@@ -11,9 +11,7 @@ const NewBook = (props) => {
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
-  const [createBooks] = useMutation(CREATE_BOOKS,{
-    refetchQueries:[{query:ALL_BOOKS}]
-  })
+  const [createBooks] = useMutation(CREATE_BOOKS)
 
   if (!props.show) {
     return null
@@ -22,7 +20,7 @@ const NewBook = (props) => {
     event.preventDefault()
     const publisehdInt = Number(published)
     try{
-      const result = await  createBooks({variables:{title,author,published:parseInt(publisehdInt),genres,refetchQueries:[{query:ALL_BOOKS}]}})
+      const result = await  createBooks({variables:{title,author,published:parseInt(publisehdInt),genres}})
     console.log("Libro creado", result.data.addBook)
 
     setTitle('')

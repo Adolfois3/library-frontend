@@ -63,4 +63,18 @@ login(username: $username, password: $password){
 }
 `
 
-
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      id
+      title
+      published
+      genres
+      author {
+        id
+        name
+        born
+      }
+    }
+  }
+`
